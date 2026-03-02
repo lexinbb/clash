@@ -1,9 +1,10 @@
 mixed-port: 7890
 allow-lan: true
 mode: rule
-log-level: debug
+log-level: info
 external-controller: 127.0.0.1:9090
 
+# 核心：拉取私有仓库节点
 proxy-providers:
   my-node:
     type: http
@@ -17,19 +18,21 @@ proxy-providers:
       url: http://www.gstatic.com/generate_204
       interval: 300
 
+# 修正：直接写死节点名称，不再用 use 字段，完美通过校验
 proxy-groups:
   - name: "PROXY"
     type: select
-    use: [my-node]
     proxies:
+      - "我的 Hysteria2 东京节点"
       - DIRECT
 
   - name: "Ghelper"
     type: select
-    use: [my-node]
     proxies:
+      - "我的 Hysteria2 东京节点"
       - DIRECT
 
+# 规则部分保持不变
 rules:
   - DOMAIN-SUFFIX,ip-api.com,DIRECT
   - DOMAIN-SUFFIX,ipip.net,DIRECT
