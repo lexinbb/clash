@@ -4,29 +4,35 @@ mode: rule
 log-level: info
 external-controller: 127.0.0.1:9090
 
-proxies:
-  - name: "我的 Hysteria2 东京节点"
-    type: hysteria2
-    server: base64://NDcuNzkuNDIuNDg
-    port: 443
-    password: base64://ZG9uZzE5OTA0MjY
-    sni: base64://bGVpeG4uY2MuY2Q
-    alpn:
-      - h3
-    skip-cert-verify: true
+# 核心：拉取私有仓库节点（已填好你的仓库地址，仅需替换PAT）
+proxy-providers:
+  my-node:
+    type: http
+    url: "https://raw.githubusercontent.com/lexinbb/clash-private-node/main/node.yaml"
+    # 👇 替换这里的 ghp_xxxxxxxx 为你生成的GitHub PAT
+    headers:
+      Authorization: token ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    interval: 3600  # 每小时自动更新节点
+    path: ./providers/my-node.yaml
+    health-check:
+      enable: true
+      url: http://www.gstatic.com/generate_204
+      interval: 300  # 5分钟检测节点可用性
 
 proxy-groups:
   - name: "PROXY"
     type: select
+    use: [my-node]  # 引用私有节点
     proxies:
-      - "我的 Hysteria2 东京节点"
-      - DIRECT
-  - name: "Ghelper"  # 新增Ghelper分组，对应分流规则中的Ghelper目标
-    type: select
-    proxies:
-      - "我的 Hysteria2 东京节点"
       - DIRECT
 
+  - name: "Ghelper"
+    type: select
+    use: [my-node]  # 引用私有节点
+    proxies:
+      - DIRECT
+
+# 所有规则保持原样，无需修改
 rules:
   - DOMAIN-SUFFIX,ip-api.com,DIRECT
   - DOMAIN-SUFFIX,ipip.net,DIRECT
