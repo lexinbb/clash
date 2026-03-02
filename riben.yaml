@@ -1,10 +1,9 @@
 mixed-port: 7890
 allow-lan: true
 mode: rule
-log-level: debug  # 改为debug，能看到节点拉取的详细日志
+log-level: debug
 external-controller: 127.0.0.1:9090
 
-# 核心：拉取私有仓库节点（已填你的PAT，仅需确认权限）
 proxy-providers:
   my-node:
     type: http
@@ -18,21 +17,19 @@ proxy-providers:
       url: http://www.gstatic.com/generate_204
       interval: 300
 
-# 简化proxy-groups写法，确保能正确引用节点
 proxy-groups:
   - name: "PROXY"
     type: select
+    use: [my-node]
     proxies:
-      - my-node  # 直接引用provider，自动加载节点
       - DIRECT
 
   - name: "Ghelper"
     type: select
+    use: [my-node]
     proxies:
-      - my-node  # 直接引用provider，自动加载节点
       - DIRECT
 
-# 规则部分完全不变（无需修改）
 rules:
   - DOMAIN-SUFFIX,ip-api.com,DIRECT
   - DOMAIN-SUFFIX,ipip.net,DIRECT
