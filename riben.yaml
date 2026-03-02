@@ -1,38 +1,38 @@
 mixed-port: 7890
 allow-lan: true
 mode: rule
-log-level: info
+log-level: debug  # 改为debug，能看到节点拉取的详细日志
 external-controller: 127.0.0.1:9090
 
-# 核心：拉取私有仓库节点（已填好你的仓库地址，仅需替换PAT）
+# 核心：拉取私有仓库节点（已填你的PAT，仅需确认权限）
 proxy-providers:
   my-node:
     type: http
     url: "https://raw.githubusercontent.com/lexinbb/clash-private-node/main/node.yaml"
-    # 👇 替换这里的 ghp_xxxxxxxx 为你生成的GitHub PAT
     headers:
       Authorization: token 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
-    interval: 3600  # 每小时自动更新节点
+    interval: 3600
     path: ./providers/my-node.yaml
     health-check:
       enable: true
       url: http://www.gstatic.com/generate_204
-      interval: 300  # 5分钟检测节点可用性
+      interval: 300
 
+# 简化proxy-groups写法，确保能正确引用节点
 proxy-groups:
   - name: "PROXY"
     type: select
-    use: [my-node]  # 引用私有节点
     proxies:
+      - my-node  # 直接引用provider，自动加载节点
       - DIRECT
 
   - name: "Ghelper"
     type: select
-    use: [my-node]  # 引用私有节点
     proxies:
+      - my-node  # 直接引用provider，自动加载节点
       - DIRECT
 
-# 所有规则保持原样，无需修改
+# 规则部分完全不变（无需修改）
 rules:
   - DOMAIN-SUFFIX,ip-api.com,DIRECT
   - DOMAIN-SUFFIX,ipip.net,DIRECT
@@ -127,4 +127,3 @@ rules:
   - DOMAIN-SUFFIX,microsoft.com,Ghelper
   - GEOIP,CN,DIRECT
   - MATCH,Ghelper
-
