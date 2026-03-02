@@ -11,7 +11,7 @@ proxy-providers:
     url: "https://raw.githubusercontent.com/lexinbb/clash-private-node/main/node.yaml"
     # 👇 替换这里的 ghp_xxxxxxxx 为你生成的GitHub PAT
     headers:
-      Authorization: token ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+      Authorization: token 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
     interval: 3600  # 每小时自动更新节点
     path: ./providers/my-node.yaml
     health-check:
@@ -127,3 +127,4 @@ rules:
   - DOMAIN-SUFFIX,microsoft.com,Ghelper
   - GEOIP,CN,DIRECT
   - MATCH,Ghelper
+
