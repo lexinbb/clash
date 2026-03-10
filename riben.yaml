@@ -9,8 +9,8 @@ proxies:
   - name: "我的 Hysteria2 东京节点"
     type: hysteria2
     server: 47.79.42.48
-    port: 443
-    password: dong1990426
+    port: 58443
+    password: dong19980426
     sni: leixn.cc.cd
     alpn:
       - h3
